@@ -25,6 +25,6 @@ extend-select = ["C4", "SIM", "TCH"]
 
 [build-system]
 requires = [
-    "poetry-core @ git+https://github.com/python-poetry/poetry-core.git@master",
+    "poetry-core @ git+https://github.com/python-poetry/poetry-core.git@main",
 ] # allows pip install -e .
 build-backend = "poetry.core.masonry.api"
