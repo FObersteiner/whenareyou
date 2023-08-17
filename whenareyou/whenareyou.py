@@ -1,21 +1,13 @@
 import os
 from functools import lru_cache
-from urllib.parse import quote  # , quote_plus
+from urllib.parse import quote
 
 import requests
 from timezonefinder import TimezoneFinder
 
-# from zoneinfo import ZoneInfo
-
 
 # -----------------------------------------------------------------------------
-# old / broken: using google maps api to obtain address lat/lng
-# -----------------------------------------------------------------------------
-_LONG_LAT_URL = (
-    "https://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false"
-)
-# -----------------------------------------------------------------------------
-# alternative: use openstreetmap
+# use openstreetmap
 # -----------------------------------------------------------------------------
 _LONG_LAT_URL_Nominatim = "http://nominatim.openstreetmap.org/search?q="
 # -----------------------------------------------------------------------------
