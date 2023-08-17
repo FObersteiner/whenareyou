@@ -3,8 +3,8 @@ name = "whenareyou"
 version = "0.6.0"
 description = "Gets the time zone name of any location in the world."
 authors = [
-    "Florian Obersteiner <f.obersteiner@posteo.de>",
-    "Lasse Schuirmann <lasse.schuirmann@gmail.com>",
+  "Florian Obersteiner <f.obersteiner@posteo.de>",
+  "Lasse Schuirmann <lasse.schuirmann@gmail.com>",
 ]
 license = "MIT"
 
@@ -24,7 +24,5 @@ exclude = ["legacy", "misc"]
 extend-select = ["C4", "SIM", "TCH"]
 
 [build-system]
-requires = [
-    "poetry-core @ git+https://github.com/python-poetry/poetry-core.git@master",
-] # allows pip install -e .
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
