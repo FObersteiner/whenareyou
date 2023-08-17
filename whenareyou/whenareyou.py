@@ -8,11 +8,12 @@ from timezonefinder import TimezoneFinder
 # from zoneinfo import ZoneInfo
 
 
-
 # -----------------------------------------------------------------------------
 # old / broken: using google maps api to obtain address lat/lng
 # -----------------------------------------------------------------------------
-_LONG_LAT_URL = "https://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false"
+_LONG_LAT_URL = (
+    "https://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false"
+)
 # -----------------------------------------------------------------------------
 # alternative: use openstreetmap
 # -----------------------------------------------------------------------------
@@ -74,7 +75,9 @@ def whenareyou(address):
     return _get_tz(*_queryOSM(address))
 
 
-with open(os.path.join(os.path.dirname(__file__), "airports.csv"), encoding="utf-8") as csvfile:
+with open(
+    os.path.join(os.path.dirname(__file__), "airports.csv"), encoding="utf-8"
+) as csvfile:
     data = csvfile.read().splitlines()
     for i, line in enumerate(data):
         data[i] = line.split(",")
