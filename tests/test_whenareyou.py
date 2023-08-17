@@ -26,7 +26,7 @@ class TestWhenareyou(unittest.TestCase):
         print("\ntesting whenareyou.whenareyou")
         # valid queries
         expected = "Europe/Brussels"
-        actual = whenareyou("Brussels, Europe")
+        actual = whenareyou("Brussels, Belgium")
         self.assertEqual(expected, actual)
 
         expected = "Asia/Taipei"
