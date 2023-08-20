@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.6.? (2023-?)
+
+- add type hints
+
 ## v0.6.1 (2023-08)
 
 - update tests, 'Brussels, Europe' is not recognized by nominatim anymore
