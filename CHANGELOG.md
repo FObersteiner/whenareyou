@@ -1,12 +1,13 @@
 # CHANGELOG
 
-## v0.6.? (2023-?)
+## v0.7.0 (2024-03)
 
-- add type hints
+- update dependencies; drop Python 3.8 support
 
 ## v0.6.1 (2023-08)
 
 - update tests, 'Brussels, Europe' is not recognized by nominatim anymore
+- add type hints
 
 ## v0.6.0 (2023-03)
 
