@@ -13,9 +13,7 @@ _LONG_LAT_URL_Nominatim = "http://nominatim.openstreetmap.org/search?q="
 # -----------------------------------------------------------------------------
 # IATA codes
 # -----------------------------------------------------------------------------
-with open(
-    os.path.join(os.path.dirname(__file__), "airports.csv"), encoding="utf-8"
-) as csvfile:
+with open(os.path.join(os.path.dirname(__file__), "airports.csv"), encoding="utf-8") as csvfile:
     data = csvfile.read().splitlines()
 
 parsed = []
