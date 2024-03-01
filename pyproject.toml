@@ -9,19 +9,23 @@ authors = [
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">= 3.8.1"
+python = ">= 3.9"
 timezonefinder = ">= 5.2"
 requests = ">= 2.27"
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
 pytest = "7.*"
 black = ">= 22.12.0"
 ruff = ">= 0.0.254"
 
-[tool.ruff] # https://github.com/charliermarsh/ruff
-ignore = ["E501"]
-exclude = ["legacy", "misc"]
-extend-select = ["C4", "SIM", "TCH"]
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.ruff]
+lint.ignore = ["E501"]
+lint.extend-select = ["C4", "SIM"]
+target-version = "py312"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
