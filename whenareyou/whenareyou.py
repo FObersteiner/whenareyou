@@ -1,15 +1,17 @@
+import json
 import os
 from functools import lru_cache
 from typing import Optional
 from urllib.parse import quote
+from urllib.request import urlopen
 
-import requests
 from timezonefinder import TimezoneFinder
 
 # -----------------------------------------------------------------------------
 # use openstreetmap
 # -----------------------------------------------------------------------------
-_LONG_LAT_URL_Nominatim = "http://nominatim.openstreetmap.org/search?q="
+_LONG_LAT_URL_Nominatim = "https://nominatim.openstreetmap.org/search?q="
+
 # -----------------------------------------------------------------------------
 # IATA codes
 # -----------------------------------------------------------------------------
@@ -22,30 +24,40 @@ for line in data:
 
 _airports_dict = {item[0]: list(item[1:]) for item in zip(*parsed)}
 
-del csvfile, data, parsed, line
 # -----------------------------------------------------------------------------
 
 
 # HELPERS ---------------------------------------------------------------------
 @lru_cache(maxsize=None)
-def _cached_json_get(url: str) -> dict:
+def _cached_get(url: str) -> Optional[str]:
     """
     a general helper -
     Makes a get to that URL and caches it. Simple right? Oh it also returns the
     JSON as a dict for you already!
     """
-    return requests.get(url).json()
+    with urlopen(url) as response:
+        body = response.read()
+    return body
 
 
 def _queryOSM(address: str) -> list[Optional[float]]:
     """
     a helper to query nominatim.openstreetmap for given address
     """
-    url = _LONG_LAT_URL_Nominatim + quote(address) + "&format=json&polygon=0"
-    response = _cached_json_get(url)
+    url = f"{_LONG_LAT_URL_Nominatim}{quote(address)}&format=json&polygon=0"
+    response = _cached_get(url)
+
+    # invalid response (403) gives an empty string here
     if not response:
-        raise ValueError(f"Address not found: '{address}'")
-    return [float(response[0].get(key)) for key in ("lat", "lon")]
+        raise ValueError(f"Invalid response for address '{address}'")
+
+    response_json = json.loads(response)
+
+    # response might be ok (200) but contains no data...
+    if not response_json:
+        raise ValueError(f"Invalid response for address '{address}'")
+
+    return [float(response_json[0].get(key)) for key in ("lat", "lon")]
 
 
 def _get_tz(lat: float, lng: float, _tf=TimezoneFinder()) -> Optional[str]:
@@ -77,7 +89,7 @@ def whenareyou(address: str) -> Optional[str]:
     """
     # adding "geolocator" kwarg would allow to select geolocating service,
     # i.e. the "geolocator" keyword would select a function like _queryOSM
-    return _get_tz(*_queryOSM(address))
+    return _get_tz(*_queryOSM(address))  # type: ignore
 
 
 def whenareyou_IATA(airport: str) -> Optional[str]:

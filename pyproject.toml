@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "whenareyou"
-version = "0.7.0"
+version = "0.7.1"
 description = "Gets the time zone name of any location in the world."
 authors = [
   "Florian Obersteiner <f.obersteiner@posteo.de>",
@@ -11,7 +11,6 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = ">= 3.9"
 timezonefinder = ">= 5.2"
-requests = ">= 2.27"
 
 [tool.poetry.dev-dependencies]
 pytest = "7.*"

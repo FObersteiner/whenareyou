@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v0.7.1 (2024-09-03)
+
+- drop dependency: requests; use urllib directly
+- cleanup code
+
 ## v0.7.0 (2024-03)
 
 - update dependencies; drop Python 3.8 support

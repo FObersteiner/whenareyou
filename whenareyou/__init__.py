@@ -1,9 +1,5 @@
 from whenareyou.whenareyou import whenareyou, whenareyou_IATA
 
-# https://docs.python.org/3/tutorial/modules.html#importing-from-a-package
-# determines which objects will be imported with "import *"
-__all__ = ("whenareyou", "whenareyou_IATA")
-
 
 def get_version():
     try:
@@ -19,3 +15,9 @@ def get_version():
 
 
 __version__ = get_version()
+
+del get_version
+
+# https://docs.python.org/3/tutorial/modules.html#importing-from-a-package
+# determines which objects will be imported with "import *"
+__all__ = ("whenareyou", "whenareyou_IATA")
