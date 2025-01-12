@@ -1,21 +1,22 @@
-[tool.poetry]
+[project]
 name = "whenareyou"
-version = "0.7.1"
+version = "0.7.2"
 description = "Gets the time zone name of any location in the world."
 authors = [
-  "Florian Obersteiner <f.obersteiner@posteo.de>",
-  "Lasse Schuirmann <lasse.schuirmann@gmail.com>",
+  { name = "Florian Obersteiner", email = "f.obersteiner@posteo.de" },
+  { name = "Lasse Schuirmann", email = "lasse.schuirmann@gmail.com" },
 ]
-license = "MIT"
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+]
+dependencies = ["timezonefinder>=6.0.0"]
 
-[tool.poetry.dependencies]
-python = ">= 3.9"
-timezonefinder = ">= 5.2"
-
-[tool.poetry.dev-dependencies]
-pytest = "7.*"
-black = ">= 22.12.0"
-ruff = ">= 0.0.254"
+[dependency-groups]
+dev = ["black>=24.10.0", "pytest>=8.3.4", "ruff>=0.9.1"]
 
 [tool.black]
 line-length = 100
@@ -27,5 +28,5 @@ lint.extend-select = ["C4", "SIM"]
 target-version = "py312"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

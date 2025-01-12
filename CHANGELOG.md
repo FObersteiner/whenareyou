@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.7.2 (2025-01-12)
+
+- move package management from poetry to uv
+
 ## v0.7.1 (2024-09-03)
 
 - drop dependency: requests; use urllib directly
