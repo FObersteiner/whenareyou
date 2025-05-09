@@ -4,9 +4,9 @@ cffi==1.17.1
     # via timezonefinder
 h3==4.2.2
     # via timezonefinder
-numpy==2.2.3
+numpy==2.2.5
     # via timezonefinder
 pycparser==2.22
     # via cffi
-timezonefinder==6.5.8
+timezonefinder==6.5.9
     # via whenareyou (pyproject.toml)
