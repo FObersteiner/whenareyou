@@ -2,11 +2,13 @@
 #    uv pip compile pyproject.toml -o requirements.txt
 cffi==1.17.1
     # via timezonefinder
-h3==4.2.2
+flatbuffers==25.2.10
     # via timezonefinder
-numpy==2.2.5
+h3==4.3.0
+    # via timezonefinder
+numpy==2.3.2
     # via timezonefinder
 pycparser==2.22
     # via cffi
-timezonefinder==6.5.9
+timezonefinder==7.0.1
     # via whenareyou (pyproject.toml)

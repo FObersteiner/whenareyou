@@ -8,7 +8,7 @@ authors = [
 ]
 license = { text = "MIT" }
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
   "Programming Language :: Python :: 3",
   "Operating System :: OS Independent",
@@ -20,12 +20,12 @@ dev = ["black>=24.10.0", "pytest>=8.3.4", "ruff>=0.9.1"]
 
 [tool.black]
 line-length = 100
-target-version = ["py39", "py310", "py311", "py312"]
+target-version = ["py310", "py311", "py312", "py313"]
 
 [tool.ruff]
 lint.ignore = ["E501"]
 lint.extend-select = ["C4", "SIM"]
-target-version = "py312"
+target-version = "py313"
 
 [build-system]
 requires = ["setuptools"]
