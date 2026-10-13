@@ -13,9 +13,21 @@ Types of changes
 
 ## [Unreleased]
 
+## v0.8.0, 2026-10-13
+
 ### Changed
 
 - bump Python dependency to 3.10
+- look up IATA codes via a dict (O(1)) instead of scanning a list
+- add a 10s timeout to Nominatim requests
+
+### Fixed
+
+- send a `User-Agent` header so Nominatim no longer returns HTTP 403
+- parse `airports.csv` with `csv.DictReader` (quoted commas corrupted ~859 rows)
+- `whenareyou_IATA` no longer rejects valid codes at index 0 (e.g. `AAA`)
+- raise `ValueError` on network/HTTP errors instead of leaking `URLError`
+- correct `_cached_get`/`_queryOSM` return type annotations
 
 ## v0.7.2, 2025-01-12
 

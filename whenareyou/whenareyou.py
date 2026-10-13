@@ -1,9 +1,10 @@
+import csv
 import json
 import os
-from functools import lru_cache
-from typing import Optional
+from functools import cache
+from urllib.error import HTTPError, URLError
 from urllib.parse import quote
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 from timezonefinder import TimezoneFinder
 
@@ -11,56 +12,76 @@ from timezonefinder import TimezoneFinder
 # use openstreetmap
 # -----------------------------------------------------------------------------
 _LONG_LAT_URL_Nominatim = "https://nominatim.openstreetmap.org/search?q="
+_TIMEOUT = 10  # seconds to wait for a response from nominatim
+
 
 # -----------------------------------------------------------------------------
 # IATA codes
 # -----------------------------------------------------------------------------
-with open(os.path.join(os.path.dirname(__file__), "airports.csv"), encoding="utf-8") as csvfile:
-    data = csvfile.read().splitlines()
+def _load_airports() -> dict[str, tuple[float, float]]:
+    """
+    parse the bundled airports.csv into a mapping of IATA code -> (lat, lon)
+    """
+    path = os.path.join(os.path.dirname(__file__), "airports.csv")
+    airports: dict[str, tuple[float, float]] = {}
+    with open(path, encoding="utf-8", newline="") as csvfile:
+        for row in csv.DictReader(csvfile):
+            code = row["iata_code"].strip()
+            if not code:
+                continue
+            # keep the first entry for duplicate codes
+            airports.setdefault(code, (float(row["latitude_deg"]), float(row["longitude_deg"])))
+    return airports
 
-parsed = []
-for line in data:
-    parsed.append(line.split(","))
 
-_airports_dict = {item[0]: list(item[1:]) for item in zip(*parsed)}
+_airports = _load_airports()
 
 # -----------------------------------------------------------------------------
 
 
 # HELPERS ---------------------------------------------------------------------
-@lru_cache(maxsize=None)
-def _cached_get(url: str) -> Optional[str]:
+@cache
+def _cached_get(url: str) -> bytes:
     """
     a general helper -
-    Makes a get to that URL and caches it. Simple right? Oh it also returns the
-    JSON as a dict for you already!
+    Makes a get to that URL and caches the raw response body.
     """
-    with urlopen(url) as response:
+    request = Request(url, headers={"User-Agent": "whenareyou python package"})
+    with urlopen(request, timeout=_TIMEOUT) as response:
         body = response.read()
     return body
 
 
-def _queryOSM(address: str) -> list[Optional[float]]:
+@cache
+def _timezone_finder() -> TimezoneFinder:
+    """
+    a helper to get a shared TimezoneFinder instance
+    (constructing it is expensive, so it is only built once)
+    """
+    return TimezoneFinder()
+
+
+def _queryOSM(address: str) -> tuple[float, float]:
     """
     a helper to query nominatim.openstreetmap for given address
     """
-    url = f"{_LONG_LAT_URL_Nominatim}{quote(address)}&format=json&polygon=0"
-    response = _cached_get(url)
-
-    # invalid response (403) gives an empty string here
-    if not response:
-        raise ValueError(f"Invalid response for address '{address}'")
-
-    response_json = json.loads(response)
+    url = f"{_LONG_LAT_URL_Nominatim}{quote(address, safe='')}&format=json&polygon=0"
+    try:
+        response_json = json.loads(_cached_get(url))
+    except (HTTPError, URLError, TimeoutError, ValueError) as e:
+        raise ValueError(f"Invalid response for address '{address}'") from e
 
     # response might be ok (200) but contains no data...
     if not response_json:
         raise ValueError(f"Invalid response for address '{address}'")
 
-    return [float(response_json[0].get(key)) for key in ("lat", "lon")]
+    try:
+        return (float(response_json[0]["lat"]), float(response_json[0]["lon"]))
+    except (KeyError, TypeError, ValueError) as e:
+        raise ValueError(f"Invalid response for address '{address}'") from e
 
 
-def _get_tz(lat: float, lng: float, _tf=TimezoneFinder()) -> Optional[str]:
+def _get_tz(lat: float, lng: float, _tf: TimezoneFinder) -> str | None:
     """
     a helper to call timezonefinder.
     returns IANA time zone name of given lat/long coordinates
@@ -72,7 +93,7 @@ def _get_tz(lat: float, lng: float, _tf=TimezoneFinder()) -> Optional[str]:
 
 
 # MAIN METHODS ----------------------------------------------------------------
-def whenareyou(address: str) -> Optional[str]:
+def whenareyou(address: str) -> str | None:
     """
     Find the time zone of a given address
 
@@ -89,10 +110,10 @@ def whenareyou(address: str) -> Optional[str]:
     """
     # adding "geolocator" kwarg would allow to select geolocating service,
     # i.e. the "geolocator" keyword would select a function like _queryOSM
-    return _get_tz(*_queryOSM(address))  # type: ignore
+    return _get_tz(*_queryOSM(address), _timezone_finder())
 
 
-def whenareyou_IATA(airport: str) -> Optional[str]:
+def whenareyou_IATA(airport: str) -> str | None:
     """
     Find the time zone of a given airport IATA code
 
@@ -108,14 +129,8 @@ def whenareyou_IATA(airport: str) -> Optional[str]:
 
     """
     airport = airport.upper().strip()
-    iatacodes = _airports_dict["iata_code"]
-    ix = iatacodes.index(airport) if airport in iatacodes else None
-
-    if not ix:
+    coords = _airports.get(airport)
+    if coords is None:
         raise ValueError(f"IATA code not found: '{airport}'")
 
-    tzname = _get_tz(
-        float(_airports_dict["latitude_deg"][ix]),
-        float(_airports_dict["longitude_deg"][ix]),
-    )
-    return tzname
+    return _get_tz(*coords, _timezone_finder())

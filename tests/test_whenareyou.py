@@ -23,7 +23,6 @@ class TestWhenareyou(unittest.TestCase):
         pass
 
     def test_whenareyou(self):
-        print("\ntesting whenareyou.whenareyou")
         # valid queries
         expected = "Europe/Brussels"
         actual = whenareyou("Brussel, Belgium")
@@ -44,7 +43,6 @@ class TestWhenareyou(unittest.TestCase):
         self.assertRaises(expected, whenareyou, ivd)
 
     def test_whenareyou_IATA(self):
-        print("\ntesting whenareyou.whenareyou_IATA")
         # valid queries
         expect = "Asia/Novosibirsk"
         actual = whenareyou_IATA("OVB")

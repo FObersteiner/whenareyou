@@ -9,16 +9,16 @@ This fork is a (heavily) modified version of @sils [whenareyou](https://github.c
 ```Python
 from whenareyou import whenareyou
 
-tz = whenareyou('Hamburg')
+tz = whenareyou("Hamburg")
 
 tz
-Out[1]: 'Europe/Berlin'
+Out[1]: "Europe/Berlin"
 
 from datetime import datetime
-from zoneinfo import ZoneInfo # Python 3.9+
+from zoneinfo import ZoneInfo  # Python 3.9+
 
 datetime(2002, 10, 27, 6, 0, 0, tzinfo=ZoneInfo(tz)).isoformat()
-Out[2]: '2002-10-27T06:00:00+01:00'
+Out[2]: "2002-10-27T06:00:00+01:00"
 ```
 
 Lookup of IATA airport codes (3-letter) is also included:
@@ -26,8 +26,8 @@ Lookup of IATA airport codes (3-letter) is also included:
 ```Python
 from whenareyou import whenareyou_IATA
 
-whenareyou_IATA('PVG') # Shanghai Pudong
-Out[3]: 'Asia/Shanghai'
+whenareyou_IATA("PVG")  # Shanghai Pudong
+Out[3]: "Asia/Shanghai"
 ```
 
 ### requires
