@@ -1,17 +1,10 @@
+from importlib import metadata
+
 from whenareyou.whenareyou import whenareyou, whenareyou_IATA
 
 
 def get_version():
-    try:
-        # Py 3.8+
-        from importlib import metadata
-
-        return metadata.version("whenareyou")
-    except ImportError:
-        # Py <= 3.7
-        import pkg_resources  # ty: ignore[unresolved-import]
-
-        return pkg_resources.get_distribution("whenareyou").version
+    return metadata.version("whenareyou")
 
 
 __version__ = get_version()
