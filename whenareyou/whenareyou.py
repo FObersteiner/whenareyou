@@ -59,7 +59,7 @@ def _queryOSM(address: str) -> list[float | None]:
     return [float(response_json[0].get(key)) for key in ("lat", "lon")]
 
 
-def _get_tz(lat: float, lng: float, _tf=TimezoneFinder()) -> str | None:
+def _get_tz(lat: float, lng: float, _tf: TimezoneFinder) -> str | None:
     """
     a helper to call timezonefinder.
     returns IANA time zone name of given lat/long coordinates
@@ -88,7 +88,7 @@ def whenareyou(address: str) -> str | None:
     """
     # adding "geolocator" kwarg would allow to select geolocating service,
     # i.e. the "geolocator" keyword would select a function like _queryOSM
-    return _get_tz(*_queryOSM(address))  # type: ignore
+    return _get_tz(*_queryOSM(address), TimezoneFinder())  # type: ignore
 
 
 def whenareyou_IATA(airport: str) -> str | None:
@@ -116,5 +116,6 @@ def whenareyou_IATA(airport: str) -> str | None:
     tzname = _get_tz(
         float(_airports_dict["latitude_deg"][ix]),
         float(_airports_dict["longitude_deg"][ix]),
+        TimezoneFinder(),
     )
     return tzname

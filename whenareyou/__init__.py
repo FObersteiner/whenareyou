@@ -9,7 +9,7 @@ def get_version():
         return metadata.version("whenareyou")
     except ImportError:
         # Py <= 3.7
-        import pkg_resources
+        import pkg_resources  # ty: ignore[unresolved-import]
 
         return pkg_resources.get_distribution("whenareyou").version
 
