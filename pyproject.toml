@@ -16,6 +16,11 @@ classifiers = [
 dependencies = ["timezonefinder>=6.0.0"]
 
 [dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.0",
+    "ty>=0.0.86",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

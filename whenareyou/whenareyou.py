@@ -1,7 +1,6 @@
 import json
 import os
-from functools import lru_cache
-from typing import Optional
+from functools import cache
 from urllib.parse import quote
 from urllib.request import urlopen
 
@@ -28,8 +27,8 @@ _airports_dict = {item[0]: list(item[1:]) for item in zip(*parsed)}
 
 
 # HELPERS ---------------------------------------------------------------------
-@lru_cache(maxsize=None)
-def _cached_get(url: str) -> Optional[str]:
+@cache
+def _cached_get(url: str) -> str | None:
     """
     a general helper -
     Makes a get to that URL and caches it. Simple right? Oh it also returns the
@@ -40,7 +39,7 @@ def _cached_get(url: str) -> Optional[str]:
     return body
 
 
-def _queryOSM(address: str) -> list[Optional[float]]:
+def _queryOSM(address: str) -> list[float | None]:
     """
     a helper to query nominatim.openstreetmap for given address
     """
@@ -60,7 +59,7 @@ def _queryOSM(address: str) -> list[Optional[float]]:
     return [float(response_json[0].get(key)) for key in ("lat", "lon")]
 
 
-def _get_tz(lat: float, lng: float, _tf=TimezoneFinder()) -> Optional[str]:
+def _get_tz(lat: float, lng: float, _tf=TimezoneFinder()) -> str | None:
     """
     a helper to call timezonefinder.
     returns IANA time zone name of given lat/long coordinates
@@ -72,7 +71,7 @@ def _get_tz(lat: float, lng: float, _tf=TimezoneFinder()) -> Optional[str]:
 
 
 # MAIN METHODS ----------------------------------------------------------------
-def whenareyou(address: str) -> Optional[str]:
+def whenareyou(address: str) -> str | None:
     """
     Find the time zone of a given address
 
@@ -92,7 +91,7 @@ def whenareyou(address: str) -> Optional[str]:
     return _get_tz(*_queryOSM(address))  # type: ignore
 
 
-def whenareyou_IATA(airport: str) -> Optional[str]:
+def whenareyou_IATA(airport: str) -> str | None:
     """
     Find the time zone of a given airport IATA code
 
